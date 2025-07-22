@@ -1,14 +1,23 @@
 [
-  {
-    "east": { "name": "Hoshoryu", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4071/" },
-    "west": { "name": "Kotonowaka", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4074/" }
-  },
-  {
-    "east": { "name": "Takakeisho", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3998/" },
-    "west": { "name": "Kiribayama", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4051/" }
-  },
-  {
-    "east": { "name": "Abi", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4031/" },
-    "west": { "name": "Ura", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4036/" }
-  }
+  { "east": "Hoshoryu", "link": "profile/your-profile" , "west": "Onosato", "link": "..." },
+  { "east": "Kotozakura", "west": "Daieisho" },
+  { "east": "Wakatakakage", "west": "Kirishima" },
+  { "east": "Ura", "west": "Hakuoho" },
+  { "east": "Abi", "west": "Onokatsu" },
+  { "east": "Meisei", "west": "Takanosho" },
+  { "east": "Endo", "west": "Tamawashi" },
+  { "east": "Kinbozan", "west": "Atamifuji" },
+  { "east": "Chiyoshoma", "west": "Roga" },
+  { "east": "Shodai", "west": "Takerufuji" },
+  { "east": "Takayasu", "west": "Ura fun fact!" },
+  { "east": "Ichiyamamoto", "west": "Nishikigi" },
+  { "east": "Gonoyama", "west": "Sadanoumi" },
+  { "east": "Shonannoumi", "west": "Ryuden" },
+  { "east": "Oho", "west": "Churanoumi" },
+  { "east": "Takarafuji", "west": "Kayoshippo" },
+  { "east": "Midorifuji", "west": "Hiradoumi" },
+  { "east": "Tamashoho", "west": "Tokihayate" },
+  { "east": "Asakoryu", "west": "Kotoshoho" },
+  { "east": "Fujinokawa", "west": "Kusano" },
+  { "east": "Hidenoumi", "west": "Shishi" }
 ]
