@@ -1,30 +1,73 @@
-<div id="match-container"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>July 2025 Day 11 Sumo Picks</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8f8f8;
+      padding: 1em;
+    }
+    h1 {
+      text-align: center;
+    }
+    .match {
+      background: white;
+      margin: 1em 0;
+      padding: 1em;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .rikishi {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.5em 0;
+    }
+    button {
+      padding: 0.5em 1em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .east { background: #d0eaff; }
+    .west { background: #ffd6d6; }
+    .picked { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Make Your Day 11 Sumo Picks</h1>
+  <div id="matches"></div>
 
-<script>
-  async function loadMatches() {
-    const response = await fetch('matches.json');
-    const matches = await response.json();
-    const container = document.getElementById('match-container');
-    container.innerHTML = '';
+  <script>
+    fetch('matches.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('matches');
+        data.forEach((match, index) => {
+          const div = document.createElement('div');
+          div.className = 'match';
+          div.innerHTML = `
+            <div class="rikishi">
+              <button class="east" onclick="pick(${index}, 'east')">${match.east}</button>
+              vs
+              <button class="west" onclick="pick(${index}, 'west')">${match.west}</button>
+            </div>
+            <div id="result-${index}" class="picked"></div>
+          `;
+          container.appendChild(div);
+        });
+      });
 
-    matches.forEach((match, index) => {
-      const matchHTML = `
-        <div class="match">
-          <label>
-            <input type="radio" name="match-${index}" value="${match.east.name}" required>
-            <a href="${match.east.link}" target="_blank">${match.east.name}</a>
-          </label>
-          vs.
-          <label>
-            <input type="radio" name="match-${index}" value="${match.west.name}">
-            <a href="${match.west.link}" target="_blank">${match.west.name}</a>
-          </label>
-        </div>
-        <br>
-      `;
-      container.innerHTML += matchHTML;
-    });
-  }
+    const picks = {};
 
-  window.onload = loadMatches;
-</script>
+    function pick(index, side) {
+      picks[index] = side;
+      const resultDiv = document.getElementById(`result-${index}`);
+      resultDiv.textContent = `You picked: ${side === 'east' ? 'East' : 'West'} rikishi`;
+    }
+  </script>
+</body>
+</html>
