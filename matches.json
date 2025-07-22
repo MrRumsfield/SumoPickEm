@@ -1,0 +1,14 @@
+[
+  {
+    "east": { "name": "Hoshoryu", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4071/" },
+    "west": { "name": "Kotonowaka", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4074/" }
+  },
+  {
+    "east": { "name": "Takakeisho", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3998/" },
+    "west": { "name": "Kiribayama", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4051/" }
+  },
+  {
+    "east": { "name": "Abi", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4031/" },
+    "west": { "name": "Ura", "link": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4036/" }
+  }
+]
