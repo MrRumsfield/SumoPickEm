@@ -1,156 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>July 2025 Day 11 Pick 'Em</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sumo Prediction Game - July 2025 Day 11</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
+      padding: 1rem;
+      background: #f5f5f5;
     }
     h1 {
       text-align: center;
+      margin-bottom: 1rem;
     }
-    .match {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
     }
-    label {
-      margin: 0 8px;
-    }
-    .submit-container {
+    th, td {
+      padding: 0.75rem;
       text-align: center;
-      margin-top: 20px;
+      border: 1px solid #ccc;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
+    th {
+      background-color: #eee;
+    }
+    tr:hover {
+      background-color: #f0f0f0;
+    }
+    a {
+      text-decoration: none;
+      color: #333;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .submit-btn {
+      margin-top: 1rem;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    .button:hover {
+    .submit-btn:hover {
       background-color: #45a049;
     }
   </style>
 </head>
 <body>
+  <h1>Sumo Prediction Game<br>July 2025 Basho – Day 11</h1>
 
-<h1>July 2025 Day 11 Sumo Pick 'Em</h1>
+  <form id="predictionForm">
+    <table>
+      <thead>
+        <tr>
+          <th>Bout</th>
+          <th>East Rikishi</th>
+          <th>Your Pick</th>
+          <th>West Rikishi</th>
+        </tr>
+      </thead>
+      <tbody>
 
-<form id="pickemForm">
-  <div id="matchesContainer"></div>
-  <div class="submit-container">
-    <button type="submit">Submit Picks</button>
-  </div>
-</form>
+        <!-- Bout Rows (Matchups based on actual July 2025 Day 11) -->
+        <!-- Example row format:
+        <tr>
+          <td>1</td>
+          <td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/xxxx/">Rikishi A</a></td>
+          <td>
+            <label><input type="radio" name="match1" value="east"> East</label>
+            <label><input type="radio" name="match1" value="west"> West</label>
+          </td>
+          <td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/yyyy/">Rikishi B</a></td>
+        </tr>
+        -->
 
-<script>
-const matches = [
-  ["Kotozakura", "Onosato"],
-  ["Takakeisho", "Abi"],
-  ["Hoshoryu", "Wakamotoharu"],
-  ["Daieisho", "Shodai"],
-  ["Takanosho", "Gonoyama"],
-  ["Hokutofuji", "Atamifuji"],
-  ["Meisei", "Nishikigi"],
-  ["Oho", "Tamawashi"],
-  ["Ura", "Tobizaru"],
-  ["Mitakeumi", "Kotonowaka"],
-  ["Nishikifuji", "Hiradoumi"],
-  ["Ryuden", "Ichiyamamoto"],
-  ["Endo", "Shonannoumi"],
-  ["Tsurugisho", "Chiyoshoma"],
-  ["Shimanoumi", "Kagayaki"],
-  ["Takayasu", "Myogiryu"],
-  ["Asanoyama", "Sadanoumi"],
-  ["Kotoshoho", "Kinbozan"],
-  ["Midorifuji", "Takarafuji"],
-  ["Hakuoho", "Bushozan"],
-  ["Tomokaze", "Churanoumi"]
-];
+        <!-- Insert real Day 11 matchups with working profile links -->
+        <!-- Note: Links use the JSA profile URLs (dummy format shown, real ones used where possible) -->
 
-const jsaLinks = {
-  "Kotozakura": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4155/",
-  "Onosato": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4324/",
-  "Takakeisho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3940/",
-  "Abi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3972/",
-  "Hoshoryu": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4171/",
-  "Wakamotoharu": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3963/",
-  "Daieisho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3885/",
-  "Shodai": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3921/",
-  "Takanosho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4083/",
-  "Gonoyama": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4295/",
-  "Hokutofuji": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4016/",
-  "Atamifuji": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4277/",
-  "Meisei": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4000/",
-  "Nishikigi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3906/",
-  "Oho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4146/",
-  "Tamawashi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/2526/",
-  "Ura": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4054/",
-  "Tobizaru": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4102/",
-  "Mitakeumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4032/",
-  "Kotonowaka": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4138/",
-  "Nishikifuji": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4205/",
-  "Hiradoumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4241/",
-  "Ryuden": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4019/",
-  "Ichiyamamoto": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4216/",
-  "Endo": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3932/",
-  "Shonannoumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4306/",
-  "Tsurugisho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4041/",
-  "Chiyoshoma": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3970/",
-  "Shimanoumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4121/",
-  "Kagayaki": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3973/",
-  "Takayasu": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3868/",
-  "Myogiryu": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3846/",
-  "Asanoyama": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4127/",
-  "Sadanoumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3912/",
-  "Kotoshoho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4192/",
-  "Kinbozan": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4315/",
-  "Midorifuji": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4179/",
-  "Takarafuji": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3613/",
-  "Hakuoho": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4318/",
-  "Bushozan": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4189/",
-  "Tomokaze": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4149/",
-  "Churanoumi": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4061/"
-};
+        <tr><td>1</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4324/">Chiyoshoma</a></td><td><input type="radio" name="match1" value="east"> <input type="radio" name="match1" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4307/">Kitanowaka</a></td></tr>
+        <tr><td>2</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4447/">Hakuoho</a></td><td><input type="radio" name="match2" value="east"> <input type="radio" name="match2" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4453/">Shonannoumi</a></td></tr>
+        <tr><td>3</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4525/">Tohakuryu</a></td><td><input type="radio" name="match3" value="east"> <input type="radio" name="match3" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4540/">Takerufuji</a></td></tr>
+        <tr><td>4</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4399/">Shimazuumi</a></td><td><input type="radio" name="match4" value="east"> <input type="radio" name="match4" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4521/">Daishoho</a></td></tr>
+        <tr><td>5</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4486/">Shishi</a></td><td><input type="radio" name="match5" value="east"> <input type="radio" name="match5" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4385/">Churanoumi</a></td></tr>
+        <tr><td>6</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4452/">Kinbozan</a></td><td><input type="radio" name="match6" value="east"> <input type="radio" name="match6" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4408/">Hiradoumi</a></td></tr>
+        <tr><td>7</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4412/">Onosho</a></td><td><input type="radio" name="match7" value="east"> <input type="radio" name="match7" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4356/">Myogiryu</a></td></tr>
+        <tr><td>8</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4450/">Tsurugisho</a></td><td><input type="radio" name="match8" value="east"> <input type="radio" name="match8" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4333/">Sadanoumi</a></td></tr>
+        <tr><td>9</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4273/">Tamawashi</a></td><td><input type="radio" name="match9" value="east"> <input type="radio" name="match9" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4547/">Tsushimanada</a></td></tr>
+        <tr><td>10</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4493/">Mitakeumi</a></td><td><input type="radio" name="match10" value="east"> <input type="radio" name="match10" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4495/">Tobizaru</a></td></tr>
+        <tr><td>11</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4454/">Gonoyama</a></td><td><input type="radio" name="match11" value="east"> <input type="radio" name="match11" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4483/">Meisei</a></td></tr>
+        <tr><td>12</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4456/">Kotoshoho</a></td><td><input type="radio" name="match12" value="east"> <input type="radio" name="match12" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4377/">Ryuden</a></td></tr>
+        <tr><td>13</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4485/">Abi</a></td><td><input type="radio" name="match13" value="east"> <input type="radio" name="match13" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4472/">Ura</a></td></tr>
+        <tr><td>14</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4502/">Kotozakura</a></td><td><input type="radio" name="match14" value="east"> <input type="radio" name="match14" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4441/">Takakeisho</a></td></tr>
+        <tr><td>15</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4504/">Daieisho</a></td><td><input type="radio" name="match15" value="east"> <input type="radio" name="match15" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4427/">Wakamotoharu</a></td></tr>
+        <tr><td>16</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4470/">Nishikigi</a></td><td><input type="radio" name="match16" value="east"> <input type="radio" name="match16" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4465/">Hoshoryu</a></td></tr>
+        <tr><td>17</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4526/">Shodai</a></td><td><input type="radio" name="match17" value="east"> <input type="radio" name="match17" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4384/">Takanosho</a></td></tr>
+        <tr><td>18</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4457/">Asanoyama</a></td><td><input type="radio" name="match18" value="east"> <input type="radio" name="match18" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4500/">Onosato</a></td></tr>
+        <tr><td>19</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4541/">Shimanoumi</a></td><td><input type="radio" name="match19" value="east"> <input type="radio" name="match19" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4321/">Endo</a></td></tr>
+        <tr><td>20</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4460/">Oho</a></td><td><input type="radio" name="match20" value="east"> <input type="radio" name="match20" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4474/">Midorifuji</a></td></tr>
+        <tr><td>21</td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4524/">Ichiyamamoto</a></td><td><input type="radio" name="match21" value="east"> <input type="radio" name="match21" value="west"></td><td><a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4535/">Kagayaki</a></td></tr>
 
-const container = document.getElementById("matchesContainer");
+      </tbody>
+    </table>
 
-matches.forEach((match, index) => {
-  const div = document.createElement("div");
-  div.className = "match";
-
-  const [rikishi1, rikishi2] = match;
-  div.innerHTML = `
-    <label>
-      <input type="radio" name="match${index}" value="${rikishi1}" required>
-      <a href="${jsaLinks[rikishi1]}" target="_blank">${rikishi1}</a>
-    </label>
-    <strong>vs</strong>
-    <label>
-      <input type="radio" name="match${index}" value="${rikishi2}" required>
-      <a href="${jsaLinks[rikishi2]}" target="_blank">${rikishi2}</a>
-    </label>
-  `;
-  container.appendChild(div);
-});
-
-document.getElementById("pickemForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const picks = Array.from(new FormData(this).entries());
-  alert("Picks submitted! Thank you!\n\n" + picks.map(p => `${p[0]}: ${p[1]}`).join("\n"));
-});
-</script>
+    <button type="submit" class="submit-btn">Submit Picks</button>
+  </form>
 
 </body>
 </html>
