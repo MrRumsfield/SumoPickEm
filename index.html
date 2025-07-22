@@ -1,99 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumo Daily Pick'em</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
-    h1 { color: #333; }
-    form { background: white; padding: 1rem; border-radius: 8px; max-width: 700px; margin: auto; }
-    .match { margin: 1rem 0; padding: 1rem; border: 1px solid #ccc; border-radius: 6px; background: #fafafa; }
-    label { display: block; margin: 0.3rem 0; cursor: pointer; }
-    .rikishi-name { margin-left: 0.5rem; color: #0055aa; text-decoration: none; }
-    button { padding: 0.75rem 1.5rem; font-size: 1rem; background: #008f2f; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #007027; }
-    .scoreboard { margin-top: 2rem; background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #ccc; max-width: 700px; margin: 2rem auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 0.5rem; text-align: center; border-bottom: 1px solid #ddd; }
-    th { background-color: #f0f0f0; }
-  </style>
-</head>
-<body>
-  <h1>Sumo Daily Pick'em - Makuuchi Matches</h1>
-  <form id="pickem-form">
-    <!-- Repeat this .match block for all 10–21 matches depending on the day -->
-    <div class="match" data-match="1">
-      <strong>Match 1:</strong><br />
-      <label><input type="radio" name="match1" value="rikishi1" required /> <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/1234/" target="_blank" class="rikishi-name">Rikishi 1</a></label>
-      <label><input type="radio" name="match1" value="rikishi2" required /> <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/5678/" target="_blank" class="rikishi-name">Rikishi 2</a></label>
-    </div>
+<div id="match-container"></div>
 
-    <!-- Repeat similar match blocks up to ~21 for full Makuuchi day -->
+<script>
+  async function loadMatches() {
+    const response = await fetch('matches.json');
+    const matches = await response.json();
+    const container = document.getElementById('match-container');
+    container.innerHTML = '';
 
-    <div class="match" data-match="2">
-      <strong>Match 2:</strong><br />
-      <label><input type="radio" name="match2" value="rikishi3" required /> <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/1111/" target="_blank" class="rikishi-name">Rikishi 3</a></label>
-      <label><input type="radio" name="match2" value="rikishi4" required /> <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/2222/" target="_blank" class="rikishi-name">Rikishi 4</a></label>
-    </div>
-
-    <!-- Add as many matches as needed -->
-
-    <button type="submit">Submit Picks</button>
-  </form>
-
-  <div class="scoreboard">
-    <h2>Your Scoreboard</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Period</th>
-          <th>Correct Picks</th>
-          <th>Total Matches</th>
-          <th>Win %</th>
-          <th>Rank</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Today</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-        </tr>
-        <tr>
-          <td>This Basho</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-        </tr>
-        <tr>
-          <td>All Time</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <script>
-    document.getElementById("pickem-form").addEventListener("submit", function(e) {
-      const matches = document.querySelectorAll(".match");
-      for (let match of matches) {
-        const radios = match.querySelectorAll("input[type='radio']");
-        const name = radios[0]?.name;
-        if (!document.querySelector(`input[name='${name}']:checked`)) {
-          alert("Please select a winner for all matches before submitting.");
-          e.preventDefault();
-          return;
-        }
-      }
-      alert("Your picks have been submitted!");
+    matches.forEach((match, index) => {
+      const matchHTML = `
+        <div class="match">
+          <label>
+            <input type="radio" name="match-${index}" value="${match.east.name}" required>
+            <a href="${match.east.link}" target="_blank">${match.east.name}</a>
+          </label>
+          vs.
+          <label>
+            <input type="radio" name="match-${index}" value="${match.west.name}">
+            <a href="${match.west.link}" target="_blank">${match.west.name}</a>
+          </label>
+        </div>
+        <br>
+      `;
+      container.innerHTML += matchHTML;
     });
-  </script>
-</body>
-</html>
+  }
+
+  window.onload = loadMatches;
+</script>
