@@ -1,176 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Day 11 - Sumo Matchup Picks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>July 2025 Basho - Day 11 Picks</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f5f5f5;
+      padding: 20px;
+      background-color: #fafafa;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
     }
-    .matchup {
-      background: white;
-      margin: 10px auto;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px auto;
+      max-width: 800px;
     }
-    .rikishi {
-      display: inline-block;
-      width: 45%;
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
       text-align: center;
-      margin: 5px;
     }
-    .pick-button {
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background-color: #ddd;
+    th {
+      background-color: #f2f2f2;
     }
-    .pick-button.selected {
-      background-color: #4caf50;
-      color: white;
-      font-weight: bold;
-    }
-    #submit-picks {
+    .submit-btn {
       display: block;
       margin: 20px auto;
-      padding: 12px 24px;
+      padding: 10px 20px;
       font-size: 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+      color: #0077cc;
     }
   </style>
 </head>
-
 <body>
-  <h1>Day 11 - Makuuchi Matchups</h1>
-
-  <div id="matchups">
-    <!-- Sample Matchup -->
-    <div class="matchup">
-      <div class="rikishi">Terunofuji</div>
-      <div class="rikishi">Kotozakura</div><br />
-      <button class="pick-button" data-match-id="match1">Terunofuji</button>
-      <button class="pick-button" data-match-id="match1">Kotozakura</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Hoshoryu</div>
-      <div class="rikishi">Onosato</div><br />
-      <button class="pick-button" data-match-id="match2">Hoshoryu</button>
-      <button class="pick-button" data-match-id="match2">Onosato</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Abi</div>
-      <div class="rikishi">Takakeisho</div><br />
-      <button class="pick-button" data-match-id="match3">Abi</button>
-      <button class="pick-button" data-match-id="match3">Takakeisho</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Kirishima</div>
-      <div class="rikishi">Nishikigi</div><br />
-      <button class="pick-button" data-match-id="match4">Kirishima</button>
-      <button class="pick-button" data-match-id="match4">Nishikigi</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Shodai</div>
-      <div class="rikishi">Meisei</div><br />
-      <button class="pick-button" data-match-id="match5">Shodai</button>
-      <button class="pick-button" data-match-id="match5">Meisei</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Daieisho</div>
-      <div class="rikishi">Wakamotoharu</div><br />
-      <button class="pick-button" data-match-id="match6">Daieisho</button>
-      <button class="pick-button" data-match-id="match6">Wakamotoharu</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Ura</div>
-      <div class="rikishi">Mitakeumi</div><br />
-      <button class="pick-button" data-match-id="match7">Ura</button>
-      <button class="pick-button" data-match-id="match7">Mitakeumi</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Asanoyama</div>
-      <div class="rikishi">Gonoyama</div><br />
-      <button class="pick-button" data-match-id="match8">Asanoyama</button>
-      <button class="pick-button" data-match-id="match8">Gonoyama</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Tobizaru</div>
-      <div class="rikishi">Ryuden</div><br />
-      <button class="pick-button" data-match-id="match9">Tobizaru</button>
-      <button class="pick-button" data-match-id="match9">Ryuden</button>
-    </div>
-
-    <div class="matchup">
-      <div class="rikishi">Shonannoumi</div>
-      <div class="rikishi">Tamawashi</div><br />
-      <button class="pick-button" data-match-id="match10">Shonannoumi</button>
-      <button class="pick-button" data-match-id="match10">Tamawashi</button>
-    </div>
-  </div>
-
-  <button id="submit-picks">Submit Picks</button>
+  <h1>July 2025 Basho - Day 11</h1>
+  <form id="sumoForm">
+    <table>
+      <thead>
+        <tr>
+          <th>East Rikishi</th>
+          <th>Pick</th>
+          <th>West Rikishi</th>
+          <th>Pick</th>
+        </tr>
+      </thead>
+      <tbody id="matchesTable">
+        <!-- Match rows will be inserted here -->
+      </tbody>
+    </table>
+    <button class="submit-btn" type="submit">Submit Picks</button>
+  </form>
 
   <script>
-    const picks = {};
+    const matches = [
+      ["Hakuoho", "Abi"],
+      ["Onosato", "Nishikigi"],
+      ["Kotozakura", "Meisei"],
+      ["Takakeisho", "Shodai"],
+      ["Hoshoryu", "Gonoyama"],
+      ["Daieisho", "Tobizaru"],
+      ["Wakamotoharu", "Ura"],
+      ["Kotonowaka", "Mitakeumi"],
+      ["Kiribayama", "Takayasu"],
+      ["Shonannoumi", "Asanoyama"],
+      ["Tamawashi", "Takanosho"],
+      ["Ryuden", "Tsurugisho"],
+      ["Ichiyamamoto", "Atamifuji"],
+      ["Oho", "Hiradoumi"],
+      ["Chiyoshoma", "Sadanoumi"],
+      ["Myogiryu", "Kinbozan"],
+      ["Endo", "Kagayaki"],
+      ["Daiamami", "Roga"],
+      ["Tomokaze", "Shirokuma"],
+      ["Tohakuryu", "Bushozan"],
+      ["Shimazuumi", "Kitanowaka"]
+    ];
 
-    function selectWinner(matchId, rikishiName) {
-      picks[matchId] = rikishiName;
-      const buttons = document.querySelectorAll(`[data-match-id="${matchId}"]`);
-      buttons.forEach(btn => {
-        btn.classList.remove('selected');
-        if (btn.textContent === rikishiName) {
-          btn.classList.add('selected');
-        }
+    const matchesTable = document.getElementById("matchesTable");
+    const form = document.getElementById("sumoForm");
+
+    function loadPicks() {
+      const saved = JSON.parse(localStorage.getItem("sumoPicks") || "{}");
+      return saved;
+    }
+
+    function savePick(matchIndex, pick) {
+      const saved = loadPicks();
+      saved[matchIndex] = pick;
+      localStorage.setItem("sumoPicks", JSON.stringify(saved));
+    }
+
+    function buildMatchRow(east, west, index, savedPick) {
+      const tr = document.createElement("tr");
+
+      const eastTd = document.createElement("td");
+      eastTd.innerHTML = `<a href="https://sumodb.sumogames.de/Rikishi.aspx?r=${east}" target="_blank">${east}</a>`;
+      tr.appendChild(eastTd);
+
+      const eastPick = document.createElement("td");
+      eastPick.innerHTML = `<input type="radio" name="match${index}" value="${east}" ${savedPick === east ? "checked" : ""}>`;
+      tr.appendChild(eastPick);
+
+      const westTd = document.createElement("td");
+      westTd.innerHTML = `<a href="https://sumodb.sumogames.de/Rikishi.aspx?r=${west}" target="_blank">${west}</a>`;
+      tr.appendChild(westTd);
+
+      const westPick = document.createElement("td");
+      westPick.innerHTML = `<input type="radio" name="match${index}" value="${west}" ${savedPick === west ? "checked" : ""}>`;
+      tr.appendChild(westPick);
+
+      return tr;
+    }
+
+    function renderMatches() {
+      const savedPicks = loadPicks();
+      matches.forEach(([east, west], i) => {
+        const saved = savedPicks[i];
+        const row = buildMatchRow(east, west, i, saved);
+        matchesTable.appendChild(row);
       });
     }
 
-    document.querySelectorAll('.pick-button').forEach(button => {
-      button.addEventListener('click', function () {
-        const matchId = this.dataset.matchId;
-        const rikishi = this.textContent;
-        selectWinner(matchId, rikishi);
-      });
-    });
-
-    document.getElementById('submit-picks').addEventListener('click', function () {
-      if (Object.keys(picks).length === 0) {
-        alert("Please make your picks before submitting!");
-        return;
+    form.addEventListener("change", (e) => {
+      if (e.target.name.startsWith("match")) {
+        const index = parseInt(e.target.name.replace("match", ""));
+        const pick = e.target.value;
+        savePick(index, pick);
       }
-      localStorage.setItem('sumoPicksDay11', JSON.stringify(picks));
-      alert("Your picks have been saved!");
-      console.log("Saved picks:", picks);
     });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Your picks have been submitted!");
+      localStorage.removeItem("sumoPicks");
+      location.reload();
+    });
+
+    renderMatches();
   </script>
-</body>
-
-</html>
-
-    <button type="submit" class="submit-btn">Submit Picks</button>
-  </form>
-
 </body>
 </html>
