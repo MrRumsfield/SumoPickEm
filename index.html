@@ -1,49 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Sumo Matchups</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <style>
     body {
       font-family: sans-serif;
-      padding: 2em;
+      margin: 20px;
+      background-color: #f2f2f2;
     }
+
     h1 {
       text-align: center;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1em;
+
+    .matchup {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    th, td {
-      padding: 0.75em;
-      border: 1px solid #ccc;
+
+    .rikishi {
+      width: 40%;
       text-align: center;
     }
-    .rikishi-link {
+
+    .vs {
+      width: 20%;
+      text-align: center;
+    }
+
+    .rikishi a {
+      color: #333;
       text-decoration: none;
-      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .rikishi a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>Daily Sumo Matchups</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>East Rikishi</th>
-        <th>Vote East</th>
-        <th>Vote West</th>
-        <th>West Rikishi</th>
-      </tr>
-    </thead>
-    <tbody id="matchups-body">
-      <!-- Matchups will be rendered here -->
-    </tbody>
-  </table>
+
+  <h1>Today's Sumo Matchups</h1>
+  <div id="matchups"></div>
 
   <script>
-    document.addEvent
+    async function loadData() {
+      try {
+        const [matchesRes, rikishiRes] = await Promise.all([
+          fetch("matches.json"),
+          fetch("rikishi.json")
+        ]);
+
+        const matches = await matchesRes.json();
+        const rikishiList = await rikishiRes.json();
+
+        const rikishiMap = {};
+        rikishiList.forEach(r => {
+          if (r.id) {
+            rikishiMap[r.id.toLowerCase()] = r;
+          }
+        });
+
+        const container = document.getElementById("matchups");
+        matches.forEach(match => {
+          const east = rikishiMap[match.east.toLowerCase()];
+          const west = rikishiMap[match.west.toLowerCase()];
+
+          const matchupDiv = document.createElement("div");
+          matchupDiv.className = "matchup";
+
+          matchupDiv.innerHTML = `
+            <div class="rikishi">${east ? `<a href="${east.url}" target="_blank">${east.shikona}</a>` : match.east}</div>
+            <div class="vs">vs</div>
+            <div class="rikishi">${west ? `<a href="${west.url}" target="_blank">${west.shikona}</a>` : match.west}</div>
+          `;
+
+          container.appendChild(matchupDiv);
+        });
+
+      } catch (err) {
+        console.error("Error loading data:", err);
+        document.getElementById("matchups").innerText = "Failed to load matchups.";
+      }
+    }
+
+    loadData();
+  </script>
+
+</body>
+</html>
