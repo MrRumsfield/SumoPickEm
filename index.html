@@ -3,64 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rikishi Matchups</title>
+  <title>Sumo Pick 'Em</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 1rem;
+      font-family: Arial, sans-serif;
+      padding: 20px;
       background-color: #f5f5f5;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 2rem;
+      margin-bottom: 40px;
     }
     th, td {
-      border: 1px solid #ddd;
-      padding: 0.5rem;
+      border: 1px solid #ccc;
+      padding: 10px;
       text-align: center;
     }
     th {
-      background-color: #eee;
-    }
-    .radio-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background-color: #e0e0e0;
     }
     .rikishi-link {
-      color: darkblue;
       text-decoration: none;
+      color: #2a3eb1;
+      font-weight: bold;
     }
     .rikishi-link:hover {
       text-decoration: underline;
     }
+    .radio-cell input {
+      transform: scale(1.2);
+    }
   </style>
 </head>
 <body>
-  <h1>Today's Rikishi Matchups</h1>
+  <h1>Sumo Pick 'Em</h1>
+  <form id="matchup-form">
+    <table>
+      <thead>
+        <tr>
+          <th>East Rikishi</th>
+          <th>Vote East</th>
+          <th>Vote West</th>
+          <th>West Rikishi</th>
+        </tr>
+      </thead>
+      <tbody id="matchup-table-body">
+        <!-- Matchups will be inserted here dynamically -->
+      </tbody>
+    </table>
+    <button type="submit">Submit Picks</button>
+  </form>
 
-  <table>
-    <thead>
-      <tr>
-        <th>East</th>
-        <th>Vote East</th>
-        <th>Vote West</th>
-        <th>West</th>
-      </tr>
-    </thead>
-    <tbody id="matchup-table-body">
-      <!-- Filled by JS -->
-    </tbody>
-  </table>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("matches.json")
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.getElementById("matchup-table-body");
 
-  <h2>Learn More About Rikishi</h2>
-  <div id="rikishi-list">
-    <!-- Links from rikishi.json inserted here -->
-  </div>
+          data.forEach((match, index) => {
+            const row = document.createElement("tr");
 
-  <!-- Load scripts at end so DOM is ready -->
-  <script src="rikishiLoader.js"></script>
-  <script src="matchLoader.js"></script>
+            // East Rikishi
+            const eastCell = document.createElement("td");
+            const eastLink = document.createElement("a");
+            eastLink.href = match.east.url;
+            eastLink.textContent = match.east.name;
+            eastLink.target = "_blank";
+            eastLink.className = "rikishi-link";
+            eastCell.appendChild(eastLink);
+            row.appendChild(eastCell);
+
+            // Vote East Radio
+            const voteEastCell = document.createElement("td");
+            voteEastCell.classList.add("radio-cell");
+            const voteEastRadio = document.createElement("input");
+            voteEastRadio.type = "radio";
+            voteEastRadio.name = `match-${index}`;
+            voteEastRadio.value = "east";
+            voteEastCell.appendChild(voteEastRadio);
+            row.appendChild(voteEastCell);
+
+            // Vote West Radio
+            const voteWestCell = document.createElement("td");
+            voteWestCell.classList.add("radio-cell");
+            const voteWestRadio = document.createElement("input");
+            voteWestRadio.type = "radio";
+            voteWestRadio.name = `match-${index}`;
+            voteWestRadio.value = "west";
+            voteWestCell.appendChild(voteWestRadio);
+            row.appendChild(voteWestCell);
+
+            // West Rikishi
+            const westCell = document.createElement("td");
+            const westLink = document.createElement("a");
+            westLink.href = match.west.url;
+            westLink.textContent = match.west.name;
+            westLink.target = "_blank";
+            westLink.className = "rikishi-link";
+            westCell.appendChild(westLink);
+            row.appendChild(westCell);
+
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error("Failed to load matches:", error);
+        });
+    });
+  </script>
 </body>
 </html>
