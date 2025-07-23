@@ -57,59 +57,74 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      fetch("matches.json")
-        .then(response => response.json())
-        .then(data => {
-          const tableBody = document.getElementById("matchup-table-body");
+  // Load rikishi list first
+let rikishiList = [];
 
-          data.forEach((match, index) => {
-            const row = document.createElement("tr");
+fetch("rikishi.json")
+  .then(response => response.json())
+  .then(data => {
+    rikishiList = data;
+    return fetch("matches.json");
+  })
+  .then(response => response.json())
+  .then(matches => {
+    const table = document.getElementById("matchup-table");
 
-            // East Rikishi
-            const eastCell = document.createElement("td");
-            const eastLink = document.createElement("a");
-            eastLink.href = match.east.url;
-            eastLink.textContent = match.east.name;
-            eastLink.target = "_blank";
-            eastLink.className = "rikishi-link";
-            eastCell.appendChild(eastLink);
-            row.appendChild(eastCell);
+    matches.forEach((match, index) => {
+      const row = document.createElement("tr");
 
-            // Vote East Radio
-            const voteEastCell = document.createElement("td");
-            voteEastCell.classList.add("radio-cell");
-            const voteEastRadio = document.createElement("input");
-            voteEastRadio.type = "radio";
-            voteEastRadio.name = `match-${index}`;
-            voteEastRadio.value = "east";
-            voteEastCell.appendChild(voteEastRadio);
-            row.appendChild(voteEastCell);
+      // East rikishi cell
+      const eastCell = document.createElement("td");
+      const eastRikishi = rikishiList.find(r => r.id === match.east);
+      if (eastRikishi) {
+        const eastLink = document.createElement("a");
+        eastLink.href = eastRikishi.url;
+        eastLink.target = "_blank";
+        eastLink.textContent = eastRikishi.shikona;
+        eastCell.appendChild(eastLink);
+      } else {
+        eastCell.textContent = "Unknown";
+      }
 
-            // Vote West Radio
-            const voteWestCell = document.createElement("td");
-            voteWestCell.classList.add("radio-cell");
-            const voteWestRadio = document.createElement("input");
-            voteWestRadio.type = "radio";
-            voteWestRadio.name = `match-${index}`;
-            voteWestRadio.value = "west";
-            voteWestCell.appendChild(voteWestRadio);
-            row.appendChild(voteWestCell);
+      // West rikishi cell
+      const westCell = document.createElement("td");
+      const westRikishi = rikishiList.find(r => r.id === match.west);
+      if (westRikishi) {
+        const westLink = document.createElement("a");
+        westLink.href = westRikishi.url;
+        westLink.target = "_blank";
+        westLink.textContent = westRikishi.shikona;
+        westCell.appendChild(westLink);
+      } else {
+        westCell.textContent = "Unknown";
+      }
 
-            // West Rikishi
-            const westCell = document.createElement("td");
-            const westLink = document.createElement("a");
-            westLink.href = match.west.url;
-            westLink.textContent = match.west.name;
-            westLink.target = "_blank";
-            westLink.className = "rikishi-link";
-            westCell.appendChild(westLink);
-            row.appendChild(westCell);
+      // Vote east cell
+      const voteEastCell = document.createElement("td");
+      const voteEastInput = document.createElement("input");
+      voteEastInput.type = "radio";
+      voteEastInput.name = `vote-${index}`;
+      voteEastInput.value = "east";
+      voteEastCell.appendChild(voteEastInput);
 
-            tableBody.appendChild(row);
-          });
-        })
-        .catch(error => {
-          console.error("Failed to load matches:", error);
+      // Vote west cell
+      const voteWestCell = document.createElement("td");
+      const voteWestInput = document.createElement("input");
+      voteWestInput.type = "radio";
+      voteWestInput.name = `vote-${index}`;
+      voteWestInput.value = "west";
+      voteWestCell.appendChild(voteWestInput);
+
+      // Append all cells
+      row.appendChild(eastCell);
+      row.appendChild(westCell);
+      row.appendChild(voteEastCell);
+      row.appendChild(voteWestCell);
+
+      table.appendChild(row);
+    });
+  })
+  .catch(error => console.error("Error loading data:", error));
         });
     });
   </script>
