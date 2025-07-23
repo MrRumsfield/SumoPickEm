@@ -40,9 +40,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       try {
-        const [matchesResponse, rikishiResponse] = await Promise.all([
-          fetch("matches.json"),
-          fetch("rikishi.json")
+        const [rikishiResponse, matchesResponse] = await Promise.all([
+          fetch("rikishi.json"),
+          fetch("matches.json")
         ]);
 
         const matches = await matchesResponse.json();
