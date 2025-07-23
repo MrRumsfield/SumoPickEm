@@ -59,6 +59,7 @@
 </head>
 <body>
   <h1>Day 11 Matchups – July 2025 Basho</h1>
+
   <form id="picksForm">
     <table>
       <thead>
@@ -69,51 +70,8 @@
           <th></th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Example Row (Repeat for All Matchups) -->
-        <tr>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/3661/" target="_blank">Kotozakura</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match0" value="Kotozakura" required>
-          </td>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/3842/" target="_blank">Hoshoryu</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match0" value="Hoshoryu">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4227/" target="_blank">Onosato</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match1" value="Onosato" required>
-          </td>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/3485/" target="_blank">Abi</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match1" value="Abi">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/4230/" target="_blank">Aonishiki</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match2" value="Aonishiki" required>
-          </td>
-          <td>
-            <a href="https://www.sumo.or.jp/EnSumoDataRikishi/profile/3622/" target="_blank">Kirishima</a>
-          </td>
-          <td class="radio-container">
-            <input type="radio" name="match2" value="Kirishima">
-          </td>
-        </tr>
-        <!-- Add more matchups here -->
+      <tbody id="matchupsBody">
+        <!-- Populated by rikishiLoader.js -->
       </tbody>
     </table>
 
@@ -121,6 +79,9 @@
       <button type="submit">Submit Picks</button>
     </div>
   </form>
+
+  <!-- Load script to render rikishi matchups -->
+  <script src="rikishiLoader.js"></script>
 
   <script>
     document.getElementById('picksForm').addEventListener('submit', function(e) {
@@ -145,4 +106,3 @@
   </script>
 </body>
 </html>
-
