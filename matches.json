@@ -1,5 +1,5 @@
 [
-  { "east": "Ichiyamamoto", "link": "profile/your-profile" , "west": "Onosato", "link": "..." },
+  { "east": "Ichiyamamoto", "west": "Onosato" },
   { "east": "Kotozakura", "west": "Kirishima" },
   { "east": "Kusano", "west": "Wakatakakage" },
   { "east": "Kotoshoho", "west": "Takayasu" },
