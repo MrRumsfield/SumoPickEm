@@ -3,129 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sumo Pick 'Em</title>
+  <title>Sumo Matchups</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 40px;
     }
     th, td {
+      padding: 0.5em;
       border: 1px solid #ccc;
-      padding: 10px;
       text-align: center;
-    }
-    th {
-      background-color: #e0e0e0;
     }
     .rikishi-link {
       text-decoration: none;
-      color: #2a3eb1;
-      font-weight: bold;
-    }
-    .rikishi-link:hover {
-      text-decoration: underline;
-    }
-    .radio-cell input {
-      transform: scale(1.2);
+      color: #2c3e50;
     }
   </style>
 </head>
 <body>
-  <h1>Sumo Pick 'Em</h1>
-  <form id="matchup-form">
-    <table>
-      <thead>
-        <tr>
-          <th>East</th>
-          <th>Vote East</th>
-          <th>Vote West</th>
-          <th>West</th>
-        </tr>
-      </thead>
-      <tbody id="matchup-table-body">
-        <!-- Matchups will be inserted here dynamically -->
-      </tbody>
-    </table>
-    <button type="submit">Submit Picks</button>
-  </form>
+  <h1>Daily Sumo Matchups</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>East Rikishi</th>
+        <th>Vote East</th>
+        <th>Vote West</th>
+        <th>West Rikishi</th>
+      </tr>
+    </thead>
+    <tbody id="matchups-body">
+      <!-- Matchups will be injected here -->
+    </tbody>
+  </table>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-  // Load rikishi list first
-let rikishiList = [];
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const [matchesResponse, rikishiResponse] = await Promise.all([
+          fetch("matches.json"),
+          fetch("rikishi.json")
+        ]);
 
-fetch("rikishi.json")
-  .then(response => response.json())
-  .then(data => {
-    rikishiList = data;
-    return fetch("matches.json");
-  })
-  .then(response => response.json())
-  .then(matches => {
-    const table = document.getElementById("matchup-table");
+        const matches = await matchesResponse.json();
+        const rikishiList = await rikishiResponse.json();
 
-    matches.forEach((match, index) => {
-      const row = document.createElement("tr");
-
-      // East rikishi cell
-      const eastCell = document.createElement("td");
-      const eastRikishi = rikishiList.find(r => r.id === match.east);
-      if (eastRikishi) {
-        const eastLink = document.createElement("a");
-        eastLink.href = eastRikishi.url;
-        eastLink.target = "_blank";
-        eastLink.textContent = eastRikishi.shikona;
-        eastCell.appendChild(eastLink);
-      } else {
-        eastCell.textContent = "Unknown";
-      }
-
-      // West rikishi cell
-      const westCell = document.createElement("td");
-      const westRikishi = rikishiList.find(r => r.id === match.west);
-      if (westRikishi) {
-        const westLink = document.createElement("a");
-        westLink.href = westRikishi.url;
-        westLink.target = "_blank";
-        westLink.textContent = westRikishi.shikona;
-        westCell.appendChild(westLink);
-      } else {
-        westCell.textContent = "Unknown";
-      }
-
-      // Vote east cell
-      const voteEastCell = document.createElement("td");
-      const voteEastInput = document.createElement("input");
-      voteEastInput.type = "radio";
-      voteEastInput.name = `vote-${index}`;
-      voteEastInput.value = "east";
-      voteEastCell.appendChild(voteEastInput);
-
-      // Vote west cell
-      const voteWestCell = document.createElement("td");
-      const voteWestInput = document.createElement("input");
-      voteWestInput.type = "radio";
-      voteWestInput.name = `vote-${index}`;
-      voteWestInput.value = "west";
-      voteWestCell.appendChild(voteWestInput);
-
-      // Append all cells
-      row.appendChild(eastCell);
-      row.appendChild(westCell);
-      row.appendChild(voteEastCell);
-      row.appendChild(voteWestCell);
-
-      table.appendChild(row);
-    });
-  })
-  .catch(error => console.error("Error loading data:", error));
+        // Map rikishi ID to name and URL
+        const rikishiMap = {};
+        rikishiList.forEach(r => {
+          rikishiMap[r.id] = { name: r.name, url: r.url };
         });
+
+        const tableBody = document.getElementById("matchups-body");
+
+        matches.forEach((match, index) => {
+          const row = document.createElement("tr");
+
+          // East rikishi cell
+          const eastCell = document.createElement("td");
+          const east = rikishiMap[match.east];
+          if (east) {
+            const eastLink = document.createElement("a");
+            eastLink.href = east.url;
+            eastLink.textContent = east.name;
+            eastLink.className = "rikishi-link";
+            eastLink.target = "_blank";
+            eastLink.rel = "noopener noreferrer";
+            eastCell.appendChild(eastLink);
+          } else {
+            eastCell.textContent = "Unknown";
+          }
+
+          // Vote East cell
+          const voteEastCell = document.createElement("td");
+          const voteEast = document.createElement("input");
+          voteEast.type = "radio";
+          voteEast.name = `match-${index}`;
+          voteEast.value = "east";
+          voteEastCell.appendChild(voteEast);
+
+          // Vote West cell
+          const voteWestCell = document.createElement("td");
+          const voteWest = document.createElement("input");
+          voteWest.type = "radio";
+          voteWest.name = `match-${index}`;
+          voteWest.value = "west";
+          voteWestCell.appendChild(voteWest);
+
+          // West rikishi cell
+          const westCell = document.createElement("td");
+          const west = rikishiMap[match.west];
+          if (west) {
+            const westLink = document.createElement("a");
+            westLink.href = west.url;
+            westLink.textContent = west.name;
+            westLink.className = "rikishi-link";
+            westLink.target = "_blank";
+            westLink.rel = "noopener noreferrer";
+            westCell.appendChild(westLink);
+          } else {
+            westCell.textContent = "Unknown";
+          }
+
+          row.appendChild(eastCell);
+          row.appendChild(voteEastCell);
+          row.appendChild(voteWestCell);
+          row.appendChild(westCell);
+
+          tableBody.appendChild(row);
+        });
+
+      } catch (error) {
+        console.error("Failed to load matchups:", error);
+      }
     });
   </script>
 </body>
