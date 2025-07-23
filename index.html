@@ -3,106 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>July 2025 Basho - Day 12 Picks</title>
+  <title>Rikishi Matchups</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 2em;
-      background-color: #f4f4f4;
+      font-family: sans-serif;
+      padding: 1rem;
+      background-color: #f5f5f5;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
     }
     th, td {
-      padding: 12px;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
       text-align: center;
-      border-bottom: 1px solid #ddd;
     }
     th {
-      background-color: #333;
-      color: white;
-    }
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-    .submit-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1em;
-      background: #2c7;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #1a5;
-    }
-    a {
-      color: #0066cc;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+      background-color: #eee;
     }
     .radio-container {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+    }
+    .rikishi-link {
+      color: darkblue;
+      text-decoration: none;
+    }
+    .rikishi-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>Day 12 Matchups – July 2025 Basho</h1>
+  <h1>Today's Rikishi Matchups</h1>
 
-  <form id="picksForm">
-    <table>
-      <thead>
-        <tr>
-          <th>East Rikishi</th>
-          <th></th>
-          <th>West Rikishi</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="matchupsBody">
-        <!-- Populated by rikishiLoader.js -->
-      </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>East</th>
+        <th>Vote East</th>
+        <th>Vote West</th>
+        <th>West</th>
+      </tr>
+    </thead>
+    <tbody id="matchupsBody">
+      <!-- Matchup rows inserted by JS -->
+    </tbody>
+  </table>
 
-    <div class="submit-container">
-      <button type="submit">Submit Picks</button>
-    </div>
-  </form>
+  <h2>Learn More About Rikishi</h2>
+  <div id="rikishi-list">
+    <!-- Links from rikishi.json inserted here -->
+  </div>
 
-  <!-- Load script to render rikishi matchups -->
+  <!-- Load scripts at end so DOM is ready -->
   <script src="rikishiLoader.js"></script>
-
-  <script>
-    document.getElementById('picksForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const picks = {};
-      for (const [match, rikishi] of formData.entries()) {
-        picks[match] = rikishi;
-      }
-      localStorage.setItem('day11Picks', JSON.stringify(picks));
-      alert('Your picks have been saved!');
-    });
-
-    // Load saved picks if any
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = JSON.parse(localStorage.getItem('day11Picks') || '{}');
-      for (const [match, rikishi] of Object.entries(saved)) {
-        const radio = document.querySelector(`input[name="${match}"][value="${rikishi}"]`);
-        if (radio) radio.checked = true;
-      }
-    });
-  </script>
+  <script src="loadRikishiList.js"></script>
 </body>
 </html>
