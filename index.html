@@ -44,6 +44,14 @@
     .rikishi a:hover {
       text-decoration: underline;
     }
+
+    .radio-group {
+      margin-top: 8px;
+    }
+
+    .radio-group label {
+      margin: 0 10px;
+    }
   </style>
 </head>
 <body>
@@ -70,17 +78,37 @@
         });
 
         const container = document.getElementById("matchups");
-        matches.forEach(match => {
+        matches.forEach((match, index) => {
           const east = rikishiMap[match.east.toLowerCase()];
           const west = rikishiMap[match.west.toLowerCase()];
 
           const matchupDiv = document.createElement("div");
           matchupDiv.className = "matchup";
 
+          const matchId = `match_${index}`;
+
           matchupDiv.innerHTML = `
-            <div class="rikishi">${east ? `<a href="${east.url}" target="_blank">${east.shikona}</a>` : match.east}</div>
+            <div class="rikishi">
+              ${east ? `<a href="${east.url}" target="_blank">${east.shikona}</a>` : match.east}
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="${matchId}" value="${match.east}">
+                  Win
+                </label>
+              </div>
+            </div>
+
             <div class="vs">vs</div>
-            <div class="rikishi">${west ? `<a href="${west.url}" target="_blank">${west.shikona}</a>` : match.west}</div>
+
+            <div class="rikishi">
+              ${west ? `<a href="${west.url}" target="_blank">${west.shikona}</a>` : match.west}
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="${matchId}" value="${match.west}">
+                  Win
+                </label>
+              </div>
+            </div>
           `;
 
           container.appendChild(matchupDiv);
@@ -97,3 +125,4 @@
 
 </body>
 </html>
+
