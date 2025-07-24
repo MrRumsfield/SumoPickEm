@@ -103,32 +103,32 @@
     }
   });
 </script>
-  <script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const savedPicks = JSON.parse(localStorage.getItem("sumoPicks"));
-    const container = document.getElementById("user-data");
 
-    if (!savedPicks || Object.keys(savedPicks).length === 0) {
-      container.innerHTML = "<p>No picks submitted yet.</p>";
-      return;
+    if (savedPicks && Object.keys(savedPicks).length > 0) {
+      const picksContainer = document.createElement("div");
+      picksContainer.style.marginTop = "20px";
+      picksContainer.innerHTML = "<h2>Your Submitted Picks:</h2>";
+
+      const list = document.createElement("ul");
+      list.style.listStyleType = "none";
+      list.style.padding = "0";
+
+      Object.entries(savedPicks).forEach(([key, data]) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${data.match} — You picked: ${data.userPick}`;
+        list.appendChild(listItem);
+      });
+
+      picksContainer.appendChild(list);
+      document.body.appendChild(picksContainer);
+    } else {
+      const message = document.createElement("p");
+      message.textContent = "You have not submitted any picks yet.";
+      document.body.appendChild(message);
     }
-
-    // Create a display section for picks
-    const picksSection = document.createElement("div");
-    picksSection.innerHTML = "<h3>Your Saved Picks:</h3>";
-
-    Object.entries(savedPicks).forEach(([matchKey, rikishi]) => {
-      const formattedMatch = matchKey.replace("match_", "Match ");
-      const capitalizedName = rikishi
-        ? rikishi.charAt(0).toUpperCase() + rikishi.slice(1)
-        : "No pick";
-
-      const pickItem = document.createElement("p");
-      pickItem.textContent = `${formattedMatch}: ${capitalizedName}`;
-      picksSection.appendChild(pickItem);
-    });
-
-    container.appendChild(picksSection);
   });
 </script>
 </body>
