@@ -87,5 +87,78 @@
     container.appendChild(statsDiv);
   });
 </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userDataDiv = document.getElementById('userData');
+
+    const userDataJSON = localStorage.getItem('sumoUserData');
+    if (!userDataJSON) {
+      userDataDiv.innerHTML = '<p>No user data found. Please make some picks first.</p>';
+      return;
+    }
+
+    const userData = JSON.parse(userDataJSON);
+    const picks = userData.picks || {};
+
+    let totalPicks = 0;
+    let correctPicks = 0;
+
+    // Build collapsible table structure
+    const tableContainer = document.createElement('div');
+
+    Object.keys(picks).forEach((year) => {
+      const yearSection = document.createElement('details');
+      const yearSummary = document.createElement('summary');
+      yearSummary.textContent = year;
+      yearSection.appendChild(yearSummary);
+
+      Object.keys(picks[year]).forEach((basho) => {
+        const bashoSection = document.createElement('details');
+        const bashoSummary = document.createElement('summary');
+        bashoSummary.textContent = basho;
+        bashoSection.appendChild(bashoSummary);
+
+        Object.keys(picks[year][basho]).forEach((day) => {
+          const dayData = picks[year][basho][day];
+
+          const dayDetails = document.createElement('details');
+          const daySummary = document.createElement('summary');
+          daySummary.textContent = `Day ${day}`;
+          dayDetails.appendChild(daySummary);
+
+          const ul = document.createElement('ul');
+
+          dayData.forEach((pick) => {
+            const li = document.createElement('li');
+            li.textContent = `${pick.match}: You picked ${pick.userPick} | Correct: ${pick.correctPick ? 'Yes' : 'No'}`;
+            ul.appendChild(li);
+
+            totalPicks++;
+            if (pick.correctPick) correctPicks++;
+          });
+
+          dayDetails.appendChild(ul);
+          bashoSection.appendChild(dayDetails);
+        });
+
+        yearSection.appendChild(bashoSection);
+      });
+
+      tableContainer.appendChild(yearSection);
+    });
+
+    // Stats summary
+    const accuracy = totalPicks > 0 ? ((correctPicks / totalPicks) * 100).toFixed(2) : 'N/A';
+    const summary = document.createElement('p');
+    summary.innerHTML = `
+      <strong>Total Picks:</strong> ${totalPicks}<br>
+      <strong>Correct Picks:</strong> ${correctPicks}<br>
+      <strong>Accuracy:</strong> ${accuracy}%
+    `;
+
+    userDataDiv.appendChild(summary);
+    userDataDiv.appendChild(tableContainer);
+  });
+</script>
 </body>
 </html>
