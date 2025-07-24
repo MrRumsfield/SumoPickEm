@@ -103,5 +103,33 @@
     }
   });
 </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedPicks = JSON.parse(localStorage.getItem("sumoPicks"));
+    const container = document.getElementById("user-data");
+
+    if (!savedPicks || Object.keys(savedPicks).length === 0) {
+      container.innerHTML = "<p>No picks submitted yet.</p>";
+      return;
+    }
+
+    // Create a display section for picks
+    const picksSection = document.createElement("div");
+    picksSection.innerHTML = "<h3>Your Saved Picks:</h3>";
+
+    Object.entries(savedPicks).forEach(([matchKey, rikishi]) => {
+      const formattedMatch = matchKey.replace("match_", "Match ");
+      const capitalizedName = rikishi
+        ? rikishi.charAt(0).toUpperCase() + rikishi.slice(1)
+        : "No pick";
+
+      const pickItem = document.createElement("p");
+      pickItem.textContent = `${formattedMatch}: ${capitalizedName}`;
+      picksSection.appendChild(pickItem);
+    });
+
+    container.appendChild(picksSection);
+  });
+</script>
 </body>
 </html>
