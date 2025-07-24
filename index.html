@@ -92,29 +92,33 @@
 
           const matchId = `match_${index}`;
 
-          matchupDiv.innerHTML = `
-            <div class="rikishi">
-              ${east ? `<a href="${east.url}" target="_blank">${east.shikona}</a>` : match.east}
-              <div class="radio-group">
-                <label>
-                  <input type="radio" name="${matchId}" value="${match.east}">
-                  Win
-                </label>
-              </div>
-            </div>
+          matchupDiv.innerHTML = ``
+  <div class="rikishi">
+    <span class="rikishi-a">
+      ${east ? `<a href="${east.url}" target="_blank">${east.shikona}</a>` : match.east}
+    </span>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="${matchId}" value="${match.east}">
+        Win
+      </label>
+    </div>
+  </div>
 
-            <div class="vs">vs</div>
+  <div class="vs">vs</div>
 
-            <div class="rikishi">
-              ${west ? `<a href="${west.url}" target="_blank">${west.shikona}</a>` : match.west}
-              <div class="radio-group">
-                <label>
-                  <input type="radio" name="${matchId}" value="${match.west}">
-                  Win
-                </label>
-              </div>
-            </div>
-          `;
+  <div class="rikishi">
+    <span class="rikishi-b">
+      ${west ? `<a href="${west.url}" target="_blank">${west.shikona}</a>` : match.west}
+    </span>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="${matchId}" value="${match.west}">
+        Win
+      </label>
+    </div>
+  </div>
+`;
 
           container.appendChild(matchupDiv);
         });
