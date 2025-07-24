@@ -1,31 +1,31 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const submitButton = document.createElement("button");
-  submitButton.textContent = "Submit Picks";
-  submitButton.style.display = "block";
-  submitButton.style.margin = "20px auto";
-  submitButton.style.padding = "10px 20px";
-  submitButton.style.fontSize = "16px";
+document.getElementById("submitButton").addEventListener("click", function () {
+    const radioGroups = document.querySelectorAll('input[type="radio"]:checked');
+    const picks = {};
 
-  document.body.appendChild(submitButton);
+    const year = "2025";
+    const basho = "haru"; // or "nagoya", etc.
+    const day = "3"; // adjust this as needed
 
-  submitButton.addEventListener("click", () => {
-    const selections = [];
-    const matchups = document.querySelectorAll(".matchup");
+    radioGroups.forEach((radio, index) => {
+        const matchId = radio.name; // should be something like "match_0"
+        const selectedPick = radio.value;
 
-    matchups.forEach((match, index) => {
-      const rikishiA = match.querySelector(".rikishi-a")?.textContent.trim() || "Rikishi A";
-      const rikishiB = match.querySelector(".rikishi-b")?.textContent.trim() || "Rikishi B";
-      const selected = match.querySelector(`input[name="match_${index}"]:checked`);
-      const userPick = selected ? selected.value : null;
+        // Retrieve data-e and data-w from the radio group container
+        const container = document.querySelector(`div[data-matchid="${matchId}"]`);
+        const east = container.getAttribute("data-east");
+        const west = container.getAttribute("data-west");
 
-      selections.push({
-        match: `${rikishiA} vs ${rikishiB}`,
-        userPick: userPick,
-        correctPick: null
-      });
+        const fullMatchKey = `${year}_${basho}_${day}_${String(index + 1).padStart(3, '0')}`;
+
+        picks[fullMatchKey] = {
+            pick: selectedPick,
+            winner: null,
+            east: east,
+            west: west
+        };
     });
 
-    localStorage.setItem("sumoPicks", JSON.stringify(selections));
+    // Save to localStorage
+    localStorage.setItem("sumoPicks", JSON.stringify(picks));
     alert("Your picks have been saved!");
-  });
 });
