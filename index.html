@@ -1,75 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Sumo Match Picks</title>
+  <script defer src="submitHandler.js"></script>
+  <script defer src="loadProfile.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1em;
+    }
+    .match {
+      margin-bottom: 1em;
+      padding: 0.5em;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
-  <h1>Today's Matchups</h1>
-  <div id="matchups"></div>
-  <button id="submitPicks">Submit Picks</button>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const matchupsDiv = document.getElementById("matchups");
-
-      // Load matches.json
-      const response = await fetch("matches.json");
-      const matches = await response.json();
-
-      matches.forEach((match, index) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "matchup";
-
-        const label = document.createElement("p");
-        label.textContent = `${match.rikishiA} vs ${match.rikishiB}`;
-        wrapper.appendChild(label);
-
-        // Radio for rikishiA
-        const radioA = document.createElement("input");
-        radioA.type = "radio";
-        radioA.name = `match_${index}`;
-        radioA.value = match.rikishiA;
-        wrapper.appendChild(radioA);
-        wrapper.append(` ${match.rikishiA} `);
-
-        // Radio for rikishiB
-        const radioB = document.createElement("input");
-        radioB.type = "radio";
-        radioB.name = `match_${index}`;
-        radioB.value = match.rikishiB;
-        wrapper.appendChild(radioB);
-        wrapper.append(` ${match.rikishiB} `);
-
-        matchupsDiv.appendChild(wrapper);
-      });
-
-      document.getElementById("submitPicks").addEventListener("click", () => {
-        const allMatchups = document.querySelectorAll(".matchup");
-        const picks = [];
-
-        allMatchups.forEach((matchDiv, index) => {
-          const radios = matchDiv.querySelectorAll(`input[name="match_${index}"]`);
-          let userPick = null;
-
-          radios.forEach(radio => {
-            if (radio.checked) {
-              userPick = radio.value;
-            }
-          });
-
-          picks.push({
-            match: matches[index].rikishiA + " vs " + matches[index].rikishiB,
-            userPick: userPick,
-            correctPick: null
-          });
-        });
-
-        localStorage.setItem("sumoPicks", JSON.stringify(picks));
-        alert("Your picks have been saved!");
-      });
-    });
-  </script>
+  <h1>Pick Winners for Today's Matches</h1>
+  <form id="picksForm"></form>
+  <button id="submitBtn">Submit Picks</button>
+  <div id="confirmation" style="margin-top:1em; color: green;"></div>
 </body>
 </html>
