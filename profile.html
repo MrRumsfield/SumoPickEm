@@ -10,126 +10,54 @@
   <div class="container py-4">
     <h1 class="mb-3">My Sumo Profile</h1>
     <a href="index.html" class="btn btn-secondary mb-4">← Back to Main Picks</a>
-  <h1>My Profile</h1>
-  <div id="user-data"></div>
 
-    <!-- Overall Stats -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Pick Summary</h5>
-        <p>Total Picks Made: <span id="total-picks">0</span></p>
-        <p>Correct Picks: <span id="correct-picks">0</span></p>
-        <p>Accuracy: <span id="accuracy">0%</span></p>
-      </div>
-    </div>
-
-    <!-- Collapsible Sections for Picks -->
-    <div id="picks-accordion">
-      <!-- Populated by JS -->
+    <div id="picks-container">
+      <!-- Picks will be populated here -->
     </div>
   </div>
 
-  <script src="loadProfile.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const userDataDiv = document.getElementById('user-data');
-    const rawData = localStorage.getItem('sumoUserData');
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedPicks = JSON.parse(localStorage.getItem("sumoPicks"));
+      const container = document.getElementById("picks-container");
 
-    if (!rawData) {
-      userDataDiv.innerHTML = '<p>No picks found. Please make some picks first.</p>';
-      return;
-    }
+      if (!savedPicks || Object.keys(savedPicks).length === 0) {
+        container.innerHTML = "<p>You have not submitted any picks yet.</p>";
+        return;
+      }
 
-    const userData = JSON.parse(rawData);
-    const picks = userData.picks || {};
-    const grouped = {};
-
-    let totalPicks = 0;
-    let correctPicks = 0;
-
-    // Group data
-    Object.entries(picks).forEach(([key, matches]) => {
-      const [year, basho, day] = key.split('_');
-      if (!grouped[year]) grouped[year] = {};
-      if (!grouped[year][basho]) grouped[year][basho] = {};
-      grouped[year][basho][day] = matches;
-
-      matches.forEach(pick => {
-        totalPicks++;
-        if (pick.correctPick) correctPicks++;
-      });
-    });
-
-    const accuracy = totalPicks > 0 ? ((correctPicks / totalPicks) * 100).toFixed(1) : '0.0';
-
-    // Stats summary
-    const statsHTML = `
-      <div class="card mb-4">
+      // Summary
+      const total = Object.keys(savedPicks).length;
+      const summary = document.createElement("div");
+      summary.className = "card mb-4";
+      summary.innerHTML = `
         <div class="card-body">
           <h5 class="card-title">Pick Summary</h5>
-          <p>Total Picks Made: ${totalPicks}</p>
-          <p>Correct Picks: ${correctPicks}</p>
-          <p>Accuracy: ${accuracy}%</p>
+          <p>Total Picks Made: ${total}</p>
         </div>
-      </div>
-    `;
-    userDataDiv.innerHTML = statsHTML;
+      `;
+      container.appendChild(summary);
 
-    // Accordion data
-    for (const year in grouped) {
-      const yearBlock = document.createElement('div');
-      yearBlock.innerHTML = `<h3>${year}</h3>`;
-      for (const basho in grouped[year]) {
-        const bashoDetails = document.createElement('details');
-        bashoDetails.innerHTML = `<summary>${basho}</summary>`;
-        for (const day in grouped[year][basho]) {
-          const dayDetails = document.createElement('details');
-          dayDetails.innerHTML = `<summary>Day ${day}</summary>`;
-
-          const list = document.createElement('ul');
-          grouped[year][basho][day].forEach(match => {
-            const item = document.createElement('li');
-            const result = match.correctPick === undefined ? '' : ` | Correct: ${match.correctPick ? 'Yes' : 'No'}`;
-            item.textContent = `${match.match} → You picked: ${match.userPick}${result}`;
-            list.appendChild(item);
-          });
-
-          dayDetails.appendChild(list);
-          bashoDetails.appendChild(dayDetails);
-        }
-        yearBlock.appendChild(bashoDetails);
-      }
-      userDataDiv.appendChild(yearBlock);
-    }
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const savedPicks = JSON.parse(localStorage.getItem("sumoPicks"));
-
-    if (savedPicks && Object.keys(savedPicks).length > 0) {
-      const picksContainer = document.createElement("div");
-      picksContainer.style.marginTop = "20px";
-      picksContainer.innerHTML = "<h2>Your Submitted Picks:</h2>";
+      // List of Picks
+      const listCard = document.createElement("div");
+      listCard.className = "card";
+      const listBody = document.createElement("div");
+      listBody.className = "card-body";
 
       const list = document.createElement("ul");
-      list.style.listStyleType = "none";
-      list.style.padding = "0";
+      list.className = "list-group list-group-flush";
 
       Object.entries(savedPicks).forEach(([key, data]) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${data.match} — You picked: ${data.userPick}`;
-        list.appendChild(listItem);
+        const item = document.createElement("li");
+        item.className = "list-group-item";
+        item.textContent = `${data.match} → You picked: ${data.userPick}`;
+        list.appendChild(item);
       });
 
-      picksContainer.appendChild(list);
-      document.body.appendChild(picksContainer);
-    } else {
-      const message = document.createElement("p");
-      message.textContent = "You have not submitted any picks yet.";
-      document.body.appendChild(message);
-    }
-  });
-</script>
+      listBody.appendChild(list);
+      listCard.appendChild(listBody);
+      container.appendChild(listCard);
+    });
+  </script>
 </body>
 </html>
