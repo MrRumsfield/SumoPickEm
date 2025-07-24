@@ -23,7 +23,7 @@
   { "id": "takanosho", "shikona": "Takanosho", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3265/" },
   { "id": "ryuden", "shikona": "Ryuden", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/2890/" },
   { "id": "shonannoumi", "shikona": "Shonannoumi", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3553/" },
-  { "id": "sadanoumii", "shikona": "Sadanoumi", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/2565/" },
+  { "id": "sadanoumi", "shikona": "Sadanoumi", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/2565/" },
   { "id": "kinbozan", "shikona": "Kinbozan", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4112/" },
   { "id": "churanoumi", "shikona": "Churanoumi", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3711/" },
   { "id": "kotoshoho", "shikona": "Kotoshoho", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3840/" },
@@ -43,5 +43,7 @@
   { "id": "endo", "shikona": "Endo", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3464/" },
   { "id": "onokatsu", "shikona": "Onokatsu", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4231/" },
   { "id": "oshoma", "shikona": "Oshoma", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/4108/" },
+  { "id": "kirishima", "shikona": "Kirishima", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3622/" },
+  { "id": "tomokaze", "shikona": "Tomokaze", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3818/" },
   { "id": "ichiyamamoto", "shikona": "Ichiyamamoto", "url": "https://www.sumo.or.jp/EnSumoDataRikishi/profile/3753/" }
 ]
