@@ -56,7 +56,7 @@
 </head>
 <body>
 
-  <h1>Today's Sumo Matchups</h1>
+  <h1>Today's Sumo Matchups - <span id="japan-date"></span></h1>
   <div id="matchups"></div>
 
   <script>
@@ -122,7 +122,20 @@
 
     loadData();
   </script>
+  <script>
+  function getJapanDate() {
+    const now = new Date();
+    const japanOffset = 9 * 60; // JST is UTC+9 in minutes
+    const localOffset = now.getTimezoneOffset(); // in minutes
+    const japanTime = new Date(now.getTime() + (japanOffset + localOffset) * 60000);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return japanTime.toLocaleDateString('en-US', options);
+  }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("japan-date").textContent = getJapanDate();
+  });
+  </script>
 </body>
 </html>
 
