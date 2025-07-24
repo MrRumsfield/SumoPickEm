@@ -17,8 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
       selections[`match_${index}`] = selected ? selected.value : null;
     });
 
-    // Store selections in localStorage
-    localStorage.setItem("sumoPicks", JSON.stringify(selections));
+    const year = "2025";
+    const basho = "July";
+    const day = "Day 1"; // You can later dynamically update this if needed
+
+    const existingData = JSON.parse(localStorage.getItem("sumoPicks")) || {};
+
+    // Merge in new data
+    if (!existingData[year]) existingData[year] = {};
+    if (!existingData[year][basho]) existingData[year][basho] = {};
+    existingData[year][basho][day] = selections;
+
+    localStorage.setItem("sumoPicks", JSON.stringify(existingData));
     alert("Your picks have been saved!");
   });
 });
