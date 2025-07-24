@@ -1,31 +1,52 @@
-document.getElementById("submitButton").addEventListener("click", function () {
-    const radioGroups = document.querySelectorAll('input[type="radio"]:checked');
-    const picks = {};
+let rikishiData = {};
+let picks = {};
 
-    const year = "2025";
-    const basho = "haru"; // or "nagoya", etc.
-    const day = "3"; // adjust this as needed
+async function loadRikishi() {
+  const response = await fetch("rikishi.json");
+  const data = await response.json();
+  rikishiData = Object.fromEntries(data.map(r => [r.id, r.name]));
+}
 
-    radioGroups.forEach((radio, index) => {
-        const matchId = radio.name; // should be something like "match_0"
-        const selectedPick = radio.value;
+async function loadMatches() {
+  const response = await fetch("matches.json");
+  const matches = await response.json();
+  const form = document.getElementById("picksForm");
 
-        // Retrieve data-e and data-w from the radio group container
-        const container = document.querySelector(`div[data-matchid="${matchId}"]`);
-        const east = container.getAttribute("data-east");
-        const west = container.getAttribute("data-west");
+  matches.forEach((match, index) => {
+    const east = rikishiData[match.east] || match.east;
+    const west = rikishiData[match.west] || match.west;
 
-        const fullMatchKey = `${year}_${basho}_${day}_${String(index + 1).padStart(3, '0')}`;
+    const matchDiv = document.createElement("div");
+    matchDiv.className = "match";
 
-        picks[fullMatchKey] = {
-            pick: selectedPick,
-            winner: null,
-            east: east,
-            west: west
-        };
-    });
+    matchDiv.innerHTML = `
+      <strong>Match ${index + 1}</strong>:<br>
+      <label>
+        <input type="radio" name="match${index}" value="${match.east}"> ${east}
+      </label>
+      <label>
+        <input type="radio" name="match${index}" value="${match.west}"> ${west}
+      </label>
+    `;
 
-    // Save to localStorage
-    localStorage.setItem("sumoPicks", JSON.stringify(picks));
-    alert("Your picks have been saved!");
+    form.appendChild(matchDiv);
+  });
+}
+
+document.getElementById("submitBtn").addEventListener("click", () => {
+  const form = document.getElementById("picksForm");
+  const inputs = form.querySelectorAll("input[type='radio']:checked");
+
+  const selections = [];
+  inputs.forEach((input, index) => {
+    selections.push({ match: index + 1, pick: input.value });
+  });
+
+  localStorage.setItem("userPicks", JSON.stringify(selections));
+  document.getElementById("confirmation").textContent = "Picks submitted!";
 });
+
+(async () => {
+  await loadRikishi();
+  await loadMatches();
+})();
