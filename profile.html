@@ -30,134 +30,77 @@
   </div>
 
   <script src="loadProfile.js"></script>
-  <script>
-  // Load saved picks and display them
-  document.addEventListener("DOMContentLoaded", function () {
-    const username = localStorage.getItem("username");
-    const userData = JSON.parse(localStorage.getItem(username));
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userDataDiv = document.getElementById('user-data');
+    const rawData = localStorage.getItem('sumoUserData');
 
-    const container = document.getElementById("user-data");
-
-    if (!username || !userData || !userData.picks) {
-      container.innerHTML = "<p>No picks found for this user.</p>";
+    if (!rawData) {
+      userDataDiv.innerHTML = '<p>No picks found. Please make some picks first.</p>';
       return;
     }
 
-    // Group picks by year → basho → day
-    const groupedPicks = {};
-    Object.entries(userData.picks).forEach(([key, matchups]) => {
-      const [year, basho, day] = key.split("_");
-      if (!groupedPicks[year]) groupedPicks[year] = {};
-      if (!groupedPicks[year][basho]) groupedPicks[year][basho] = {};
-      groupedPicks[year][basho][day] = matchups;
+    const userData = JSON.parse(rawData);
+    const picks = userData.picks || {};
+    const grouped = {};
+
+    let totalPicks = 0;
+    let correctPicks = 0;
+
+    // Group data
+    Object.entries(picks).forEach(([key, matches]) => {
+      const [year, basho, day] = key.split('_');
+      if (!grouped[year]) grouped[year] = {};
+      if (!grouped[year][basho]) grouped[year][basho] = {};
+      grouped[year][basho][day] = matches;
+
+      matches.forEach(pick => {
+        totalPicks++;
+        if (pick.correctPick) correctPicks++;
+      });
     });
 
-    // Build collapsible UI
-    for (const year in groupedPicks) {
-      const yearDiv = document.createElement("div");
-      yearDiv.innerHTML = `<h2>${year}</h2>`;
-      for (const basho in groupedPicks[year]) {
-        const bashoDetails = document.createElement("details");
+    const accuracy = totalPicks > 0 ? ((correctPicks / totalPicks) * 100).toFixed(1) : '0.0';
+
+    // Stats summary
+    const statsHTML = `
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Pick Summary</h5>
+          <p>Total Picks Made: ${totalPicks}</p>
+          <p>Correct Picks: ${correctPicks}</p>
+          <p>Accuracy: ${accuracy}%</p>
+        </div>
+      </div>
+    `;
+    userDataDiv.innerHTML = statsHTML;
+
+    // Accordion data
+    for (const year in grouped) {
+      const yearBlock = document.createElement('div');
+      yearBlock.innerHTML = `<h3>${year}</h3>`;
+      for (const basho in grouped[year]) {
+        const bashoDetails = document.createElement('details');
         bashoDetails.innerHTML = `<summary>${basho}</summary>`;
-        for (const day in groupedPicks[year][basho]) {
-          const dayDetails = document.createElement("details");
+        for (const day in grouped[year][basho]) {
+          const dayDetails = document.createElement('details');
           dayDetails.innerHTML = `<summary>Day ${day}</summary>`;
 
-          const list = document.createElement("ul");
-          groupedPicks[year][basho][day].forEach((matchup) => {
-            const item = document.createElement("li");
-            item.textContent = `${matchup.rikishi1} vs ${matchup.rikishi2} → You picked: ${matchup.pick}`;
+          const list = document.createElement('ul');
+          grouped[year][basho][day].forEach(match => {
+            const item = document.createElement('li');
+            const result = match.correctPick === undefined ? '' : ` | Correct: ${match.correctPick ? 'Yes' : 'No'}`;
+            item.textContent = `${match.match} → You picked: ${match.userPick}${result}`;
             list.appendChild(item);
           });
 
           dayDetails.appendChild(list);
           bashoDetails.appendChild(dayDetails);
         }
-        yearDiv.appendChild(bashoDetails);
+        yearBlock.appendChild(bashoDetails);
       }
-      container.appendChild(yearDiv);
+      userDataDiv.appendChild(yearBlock);
     }
-
-    // Add placeholder for stats (to be implemented)
-    const statsDiv = document.createElement("div");
-    statsDiv.innerHTML = `
-      <h3>Overall Stats</h3>
-      <p><i>Stats feature coming soon...</i></p>
-    `;
-    container.appendChild(statsDiv);
-  });
-</script>
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const userDataDiv = document.getElementById('userData');
-
-    const userDataJSON = localStorage.getItem('sumoUserData');
-    if (!userDataJSON) {
-      userDataDiv.innerHTML = '<p>No user data found. Please make some picks first.</p>';
-      return;
-    }
-
-    const userData = JSON.parse(userDataJSON);
-    const picks = userData.picks || {};
-
-    let totalPicks = 0;
-    let correctPicks = 0;
-
-    // Build collapsible table structure
-    const tableContainer = document.createElement('div');
-
-    Object.keys(picks).forEach((year) => {
-      const yearSection = document.createElement('details');
-      const yearSummary = document.createElement('summary');
-      yearSummary.textContent = year;
-      yearSection.appendChild(yearSummary);
-
-      Object.keys(picks[year]).forEach((basho) => {
-        const bashoSection = document.createElement('details');
-        const bashoSummary = document.createElement('summary');
-        bashoSummary.textContent = basho;
-        bashoSection.appendChild(bashoSummary);
-
-        Object.keys(picks[year][basho]).forEach((day) => {
-          const dayData = picks[year][basho][day];
-
-          const dayDetails = document.createElement('details');
-          const daySummary = document.createElement('summary');
-          daySummary.textContent = `Day ${day}`;
-          dayDetails.appendChild(daySummary);
-
-          const ul = document.createElement('ul');
-
-          dayData.forEach((pick) => {
-            const li = document.createElement('li');
-            li.textContent = `${pick.match}: You picked ${pick.userPick} | Correct: ${pick.correctPick ? 'Yes' : 'No'}`;
-            ul.appendChild(li);
-
-            totalPicks++;
-            if (pick.correctPick) correctPicks++;
-          });
-
-          dayDetails.appendChild(ul);
-          bashoSection.appendChild(dayDetails);
-        });
-
-        yearSection.appendChild(bashoSection);
-      });
-
-      tableContainer.appendChild(yearSection);
-    });
-
-    // Stats summary
-    const accuracy = totalPicks > 0 ? ((correctPicks / totalPicks) * 100).toFixed(2) : 'N/A';
-    const summary = document.createElement('p');
-    summary.innerHTML = `
-      <strong>Total Picks:</strong> ${totalPicks}<br>
-      <strong>Correct Picks:</strong> ${correctPicks}<br>
-      <strong>Accuracy:</strong> ${accuracy}%
-    `;
-
-    userDataDiv.appendChild(summary);
-    userDataDiv.appendChild(tableContainer);
   });
 </script>
 </body>
