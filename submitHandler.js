@@ -9,31 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(submitButton);
 
   submitButton.addEventListener("click", () => {
+    const selections = [];
     const matchups = document.querySelectorAll(".matchup");
-    const picks = [];
 
     matchups.forEach((match, index) => {
+      const rikishiA = match.querySelector(".rikishi-a")?.textContent.trim() || "Rikishi A";
+      const rikishiB = match.querySelector(".rikishi-b")?.textContent.trim() || "Rikishi B";
       const selected = match.querySelector(`input[name="match_${index}"]:checked`);
-      const rikishi1 = match.dataset.rikishi1 || "Rikishi A";
-      const rikishi2 = match.dataset.rikishi2 || "Rikishi B";
+      const userPick = selected ? selected.value : null;
 
-      picks.push({
-        match: `${rikishi1} vs ${rikishi2}`,
-        userPick: selected ? selected.value : "No Pick",
-        correctPick: null  // We'll update this after the match is completed
+      selections.push({
+        match: `${rikishiA} vs ${rikishiB}`,
+        userPick: userPick,
+        correctPick: null
       });
     });
 
-    // Build structure for 2025 Nagoya Day X (example day = 1)
-    const year = "2025";
-    const basho = "nagoya";
-    const day = "1"; // This should be dynamic if your app tracks current day
-    const key = `${year}_${basho}_${day}`;
-
-    const existingData = JSON.parse(localStorage.getItem("sumoUserData")) || { picks: {} };
-    existingData.picks[key] = picks;
-
-    localStorage.setItem("sumoUserData", JSON.stringify(existingData));
+    localStorage.setItem("sumoPicks", JSON.stringify(selections));
     alert("Your picks have been saved!");
   });
 });
