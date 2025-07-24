@@ -1,27 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Add the submit button dynamically
-  const container = document.getElementById("matchups");
-  const submitBtn = document.createElement("button");
-  submitBtn.textContent = "Submit Picks";
-  submitBtn.id = "submit-picks";
-  submitBtn.style.marginTop = "20px";
-  container.appendChild(submitBtn);
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit Picks";
+  submitButton.style.display = "block";
+  submitButton.style.margin = "20px auto";
+  submitButton.style.padding = "10px 20px";
+  submitButton.style.fontSize = "16px";
 
-  // Handle submission
-  submitBtn.addEventListener("click", () => {
-    const selectedResults = {};
+  document.body.appendChild(submitButton);
 
-    const rows = document.querySelectorAll(".matchup-row");
-    rows.forEach(row => {
-      const matchId = row.dataset.matchId;
-      const selected = row.querySelector('input[type="radio"]:checked');
-      if (selected) {
-        selectedResults[matchId] = selected.value;
-      }
+  submitButton.addEventListener("click", () => {
+    const selections = {};
+    const matchups = document.querySelectorAll(".matchup");
+
+    matchups.forEach((match, index) => {
+      const selected = match.querySelector(`input[name="match_${index}"]:checked`);
+      selections[`match_${index}`] = selected ? selected.value : null;
     });
 
-    console.log("User Picks:", selectedResults); // For dev tools check
-    localStorage.setItem("userPicks", JSON.stringify(selectedResults));
-    alert("Picks submitted and stored!");
+    // Store selections in localStorage
+    localStorage.setItem("sumoPicks", JSON.stringify(selections));
+    alert("Your picks have been saved!");
   });
 });
