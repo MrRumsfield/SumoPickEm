@@ -10,6 +10,8 @@
   <div class="container py-4">
     <h1 class="mb-3">My Sumo Profile</h1>
     <a href="index.html" class="btn btn-secondary mb-4">← Back to Main Picks</a>
+  <h1>My Profile</h1>
+  <div id="user-data"></div>
 
     <!-- Overall Stats -->
     <div class="card mb-4">
@@ -28,5 +30,62 @@
   </div>
 
   <script src="loadProfile.js"></script>
+  <script>
+  // Load saved picks and display them
+  document.addEventListener("DOMContentLoaded", function () {
+    const username = localStorage.getItem("username");
+    const userData = JSON.parse(localStorage.getItem(username));
+
+    const container = document.getElementById("user-data");
+
+    if (!username || !userData || !userData.picks) {
+      container.innerHTML = "<p>No picks found for this user.</p>";
+      return;
+    }
+
+    // Group picks by year → basho → day
+    const groupedPicks = {};
+    Object.entries(userData.picks).forEach(([key, matchups]) => {
+      const [year, basho, day] = key.split("_");
+      if (!groupedPicks[year]) groupedPicks[year] = {};
+      if (!groupedPicks[year][basho]) groupedPicks[year][basho] = {};
+      groupedPicks[year][basho][day] = matchups;
+    });
+
+    // Build collapsible UI
+    for (const year in groupedPicks) {
+      const yearDiv = document.createElement("div");
+      yearDiv.innerHTML = `<h2>${year}</h2>`;
+      for (const basho in groupedPicks[year]) {
+        const bashoDetails = document.createElement("details");
+        bashoDetails.innerHTML = `<summary>${basho}</summary>`;
+        for (const day in groupedPicks[year][basho]) {
+          const dayDetails = document.createElement("details");
+          dayDetails.innerHTML = `<summary>Day ${day}</summary>`;
+
+          const list = document.createElement("ul");
+          groupedPicks[year][basho][day].forEach((matchup) => {
+            const item = document.createElement("li");
+            item.textContent = `${matchup.rikishi1} vs ${matchup.rikishi2} → You picked: ${matchup.pick}`;
+            list.appendChild(item);
+          });
+
+          dayDetails.appendChild(list);
+          bashoDetails.appendChild(dayDetails);
+        }
+        yearDiv.appendChild(bashoDetails);
+      }
+      container.appendChild(yearDiv);
+    }
+
+    // Add placeholder for stats (to be implemented)
+    const statsDiv = document.createElement("div");
+    statsDiv.innerHTML = `
+      <h3>Overall Stats</h3>
+      <p><i>Stats feature coming soon...</i></p>
+    `;
+    container.appendChild(statsDiv);
+  });
+</script>
 </body>
 </html>
