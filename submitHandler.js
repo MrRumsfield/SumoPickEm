@@ -1,44 +1,26 @@
-const fs = require('fs');
-const path = require('path');
+// submitHandler.js
 
-function getTomorrowDateString() {
+export async function handleSubmit(picks) {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  return tomorrow.toISOString().split('T')[0];
-}
+  const formattedDate = tomorrow.toISOString().split('T')[0];
 
-function savePicks(picksArray) {
-  const filePath = path.join(__dirname, 'picks.json');
-  const tomorrowDate = getTomorrowDateString();
-
-  let picksData = {};
-
-  // Read existing picks.json
-  if (fs.existsSync(filePath)) {
-    const rawData = fs.readFileSync(filePath);
-    try {
-      picksData = JSON.parse(rawData);
-    } catch (err) {
-      console.error('Error parsing picks.json:', err);
-      return;
-    }
-  }
-
-  // Ensure the date array exists
-  if (!picksData[tomorrowDate]) {
-    picksData[tomorrowDate] = [];
-  }
-
-  // Append the new picks set
-  picksData[tomorrowDate].push(picksArray.map(p => ({ pick: p })));
-
-  // Write back to picks.json
   try {
-    fs.writeFileSync(filePath, JSON.stringify(picksData, null, 2));
-    console.log(`Picks appended for ${tomorrowDate}`);
-  } catch (err) {
-    console.error('Error writing to picks.json:', err);
+    const response = await fetch('/api/save-picks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: formattedDate, picks }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Server error:', errorText);
+      alert('Failed to save your picks. Please try again.');
+    } else {
+      console.log('Picks submitted successfully!');
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+    alert('Failed to reach the server.');
   }
 }
-
-module.exports = { savePicks };
