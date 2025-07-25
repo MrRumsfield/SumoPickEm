@@ -66,14 +66,19 @@
       const savedPicks = JSON.parse(localStorage.getItem("sumoPicks")) || {};
 
       const rikishiMap = {};
-      rikishiData.forEach(r => rikishiMap[r.id] = r.name);
+      rikishiData.forEach(r => {
+        rikishiMap[r.id] = {
+          name: r.name,
+          url: r.url || "#"
+        };
+      });
 
       const form = document.getElementById("picksForm");
       form.innerHTML = "";
 
       matches.forEach((match, index) => {
-        const eastName = rikishiMap[match.east] || match.east;
-        const westName = rikishiMap[match.west] || match.west;
+        const east = rikishiMap[match.east] || { name: match.east, url: "#" };
+        const west = rikishiMap[match.west] || { name: match.west, url: "#" };
 
         const select = document.createElement("select");
         select.name = `match-${index}`;
@@ -86,12 +91,12 @@
 
         const eastOption = document.createElement("option");
         eastOption.value = match.east;
-        eastOption.textContent = eastName;
+        eastOption.textContent = east.name;
         select.appendChild(eastOption);
 
         const westOption = document.createElement("option");
         westOption.value = match.west;
-        westOption.textContent = westName;
+        westOption.textContent = west.name;
         select.appendChild(westOption);
 
         if (savedPicks[index]) {
@@ -99,7 +104,9 @@
         }
 
         const label = document.createElement("label");
-        label.textContent = `Match ${index + 1}: ${eastName} vs. ${westName}`;
+        label.innerHTML = `Match ${index + 1}: 
+          <a href="${east.url}" target="_blank">${east.name}</a> vs. 
+          <a href="${west.url}" target="_blank">${west.name}</a>`;
         label.appendChild(select);
 
         const div = document.createElement("div");
