@@ -14,21 +14,22 @@ app.post("/submit-picks", (req, res) => {
   const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
   fs.readFile(PICKS_FILE, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading picks.json:", err);
-      return res.status(500).json({ error: "Could not read picks file" });
+    let picksData = {};
+
+    if (!err && data) {
+      try {
+        picksData = JSON.parse(data);
+      } catch (parseErr) {
+        console.error("Error parsing picks.json:", parseErr);
+        return res.status(500).json({ error: "Malformed picks file" });
+      }
     }
 
-    let picksData;
-    try {
-      picksData = JSON.parse(data);
-    } catch (parseErr) {
-      console.error("Error parsing picks.json:", parseErr);
-      return res.status(500).json({ error: "Malformed picks file" });
+    if (!Array.isArray(picksData[today])) {
+      picksData[today] = [];
     }
 
-    // Add or replace picks for today
-    picksData[today] = submittedPicks;
+    picksData[today].push(submittedPicks);
 
     fs.writeFile(PICKS_FILE, JSON.stringify(picksData, null, 2), (writeErr) => {
       if (writeErr) {
