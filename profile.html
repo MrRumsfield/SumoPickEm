@@ -30,11 +30,24 @@
     .undefined {
       color: gray;
     }
+    a {
+      text-decoration: none;
+      color: #0077cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <h1>Sumo Pick Dashboard</h1>
-  <p><a href="index.html">← Go Back to Make/Edit Picks</a></p>
+  <nav>
+    <a href="index.html">← Submit New Picks</a>
+  </nav>
 
   <h2>Your Saved Picks</h2>
   <div id="savedPicks"></div>
@@ -51,7 +64,9 @@
       const matches = await matchesRes.json();
 
       const rikishiMap = {};
-      rikishiData.forEach(r => rikishiMap[r.id] = r.name);
+      rikishiData.forEach(r => {
+        rikishiMap[r.id] = r.name;
+      });
 
       const savedDiv = document.getElementById("savedPicks");
 
@@ -65,23 +80,24 @@
         const eastName = rikishiMap[match.east] || match.east;
         const westName = rikishiMap[match.west] || match.west;
 
-        let resultText = "";
-        let pickClass = "";
+        const eastLink = `<a href="rikishi.html?id=${match.east}">${eastName}</a>`;
+        const westLink = `<a href="rikishi.html?id=${match.west}">${westName}</a>`;
 
+        let resultText = "";
         if (!pick) {
           resultText = `<span class="undefined">No pick made</span>`;
         } else if (match.winner) {
           const pickedName = rikishiMap[pick] || pick;
           const outcome = pick === match.winner ? "winner" : "loser";
-          resultText = `<span class="${outcome}">${pickedName} (${outcome})</span>`;
+          resultText = `<span class="${outcome}"><a href="rikishi.html?id=${pick}">${pickedName}</a> (${outcome})</span>`;
         } else {
           const pickedName = rikishiMap[pick] || pick;
-          resultText = `<span class="pick">${pickedName}</span>`;
+          resultText = `<span class="pick"><a href="rikishi.html?id=${pick}">${pickedName}</a></span>`;
         }
 
         const matchHTML = `
           <div class="match">
-            <strong>Match ${index + 1}</strong>: ${eastName} vs. ${westName}<br />
+            <strong>Match ${index + 1}</strong>: ${eastLink} vs. ${westLink}<br />
             Your Pick: ${resultText}
           </div>
         `;
