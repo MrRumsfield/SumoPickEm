@@ -1,22 +1,27 @@
 [
-  { "winner": "kotoshoho" },
-  { "winner": "kotozakura" },
-  { "winner": "kusano" },
-  { "winner": "ura" },
-  { "winner": "oshoma" },
-  { "winner": "tamawashi" },
-  { "winner": "aonishiki" },
-  { "winner": "hakuoho" },
-  { "winner": "oho" },
-  { "winner": "takanosho" },
-  { "winner": "onokatsu" },
-  { "winner": "takerufuji" },
-  { "winner": "midorifuji" },
-  { "winner": "tobizaru" },
-  { "winner": "sadanoumi" },
-  { "winner": "shodai" },
-  { "winner": "mitakeumi" },
-  { "winner": "kayo" },
-  { "winner": "kotoeiho" },
-  { "winner": "tamashoho" }
+  {
+    "date": "2025-07-25",
+    "results": [
+      { "winner": "kotoshoho" },
+      { "winner": "kotozakura" },
+      { "winner": "kusano" },
+      { "winner": "ura" },
+      { "winner": "oshoma" },
+      { "winner": "tamawashi" },
+      { "winner": "aonishiki" },
+      { "winner": "hakuoho" },
+      { "winner": "oho" },
+      { "winner": "takanosho" },
+      { "winner": "onokatsu" },
+      { "winner": "takerufuji" },
+      { "winner": "midorifuji" },
+      { "winner": "tobizaru" },
+      { "winner": "sadanoumi" },
+      { "winner": "shodai" },
+      { "winner": "mitakeumi" },
+      { "winner": "kayo" },
+      { "winner": "kotoeiho" },
+      { "winner": "tamashoho" }
+    ]
+  }
 ]
