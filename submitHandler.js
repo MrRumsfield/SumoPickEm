@@ -45,8 +45,10 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
   // Store locally as backup
   localStorage.setItem("userPicks", JSON.stringify(selections));
 
-  // Add today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split("T")[0];
+  // Use tomorrow's date in YYYY-MM-DD format
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dateStr = tomorrow.toISOString().split("T")[0];
 
   // Send to backend to write into picks.json
   try {
@@ -56,7 +58,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        date: today,
+        date: dateStr,
         picks: selections
       })
     });
