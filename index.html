@@ -1,26 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sumo Match Picks</title>
-  <script defer src="submitHandler.js"></script>
-  <script defer src="loadProfile.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sumo Pick Submission</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 1em;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
     }
     .match {
-      margin-bottom: 1em;
-      padding: 0.5em;
       border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    label {
+      display: block;
+      margin: 5px 0;
+    }
+    select {
+      margin-top: 5px;
+      width: 100%;
+    }
+    button {
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: blue;
     }
   </style>
 </head>
 <body>
-  <h1>Pick Winners for Today's Matches</h1>
+  <h1>Sumo Pick Submission</h1>
+  <nav>
+    <a href="profile.html">View Your Picks</a>
+  </nav>
+
+  <h2>Make Your Picks</h2>
   <form id="picksForm"></form>
-  <button id="submitBtn">Submit Picks</button>
-  <div id="confirmation" style="margin-top:1em; color: green;"></div>
+  <button onclick="submitPicks()">Submit Picks</button>
+
+  <script>
+    async function loadForm() {
+      const [rikishiRes, matchesRes] = await Promise.all([
+        fetch("rikishi.json"),
+        fetch("matches.json")
+      ]);
+
+      const rikishiData = await rikishiRes.json();
+      const matches = await matchesRes.json();
+      const savedPicks = JSON.parse(localStorage.getItem("sumoPicks")) || {};
+
+      const rikishiMap = {};
+      rikishiData.forEach(r => rikishiMap[r.id] = r.name);
+
+      const form = document.getElementById("picksForm");
+      form.innerHTML = "";
+
+      matches.forEach((match, index) => {
+        const eastName = rikishiMap[match.east] || match.east;
+        const westName = rikishiMap[match.west] || match.west;
+
+        const select = document.createElement("select");
+        select.name = `match-${index}`;
+        select.dataset.index = index;
+
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Select your pick --";
+        select.appendChild(defaultOption);
+
+        const eastOption = document.createElement("option");
+        eastOption.value = match.east;
+        eastOption.textContent = eastName;
+        select.appendChild(eastOption);
+
+        const westOption = document.createElement("option");
+        westOption.value = match.west;
+        westOption.textContent = westName;
+        select.appendChild(westOption);
+
+        if (savedPicks[index]) {
+          select.value = savedPicks[index];
+        }
+
+        const label = document.createElement("label");
+        label.textContent = `Match ${index + 1}: ${eastName} vs. ${westName}`;
+        label.appendChild(select);
+
+        const div = document.createElement("div");
+        div.className = "match";
+        div.appendChild(label);
+        form.appendChild(div);
+      });
+    }
+
+    function submitPicks() {
+      const form = document.getElementById("picksForm");
+      const selects = form.querySelectorAll("select");
+      const picks = {};
+
+      selects.forEach(select => {
+        const index = select.dataset.index;
+        if (select.value) {
+          picks[index] = select.value;
+        }
+      });
+
+      localStorage.setItem("sumoPicks", JSON.stringify(picks));
+      alert("Picks submitted!");
+    }
+
+    loadForm();
+  </script>
 </body>
 </html>
