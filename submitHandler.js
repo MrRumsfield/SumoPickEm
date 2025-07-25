@@ -6,7 +6,7 @@ export async function handleSubmit(picks) {
   const formattedDate = tomorrow.toISOString().split('T')[0];
 
   try {
-    const response = await fetch('/api/save-picks', {
+    const response = await fetch('/submit-picks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date: formattedDate, picks }),
