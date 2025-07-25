@@ -42,6 +42,11 @@
       text-decoration: none;
       color: blue;
     }
+    #confirmation {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -52,7 +57,9 @@
 
   <h2>Make Your Picks</h2>
   <form id="picksForm"></form>
-  <button onclick="submitPicks()">Submit Picks</button>
+  <button id="submitBtn">Submit Picks</button>
+
+  <div id="confirmation"></div>
 
   <script>
     async function loadForm() {
@@ -63,12 +70,11 @@
 
       const rikishiData = await rikishiRes.json();
       const matches = await matchesRes.json();
-      const savedPicks = JSON.parse(localStorage.getItem("sumoPicks")) || {};
 
       const rikishiMap = {};
       rikishiData.forEach(r => {
         rikishiMap[r.id] = {
-          name: r.shikona,  // <-- FIXED HERE
+          name: r.shikona,
           url: r.url || "#"
         };
       });
@@ -99,10 +105,6 @@
         westOption.textContent = west.name;
         select.appendChild(westOption);
 
-        if (savedPicks[index]) {
-          select.value = savedPicks[index];
-        }
-
         const label = document.createElement("label");
         label.innerHTML = `Match ${index + 1}: 
           <a href="${east.url}" target="_blank">${east.name}</a> vs. 
@@ -116,21 +118,42 @@
       });
     }
 
-    function submitPicks() {
+    document.getElementById("submitBtn").addEventListener("click", async (e) => {
+      e.preventDefault();
       const form = document.getElementById("picksForm");
       const selects = form.querySelectorAll("select");
-      const picks = {};
+      const picks = [];
 
       selects.forEach(select => {
-        const index = select.dataset.index;
         if (select.value) {
-          picks[index] = select.value;
+          picks.push({ pick: select.value });
         }
       });
 
-      localStorage.setItem("sumoPicks", JSON.stringify(picks));
-      alert("Picks submitted!");
-    }
+      const today = new Date().toISOString().split("T")[0];
+
+      try {
+        const res = await fetch("/submit-picks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            date: today,
+            picks: picks
+          })
+        });
+
+        if (res.ok) {
+          document.getElementById("confirmation").textContent = "Picks submitted successfully!";
+        } else {
+          document.getElementById("confirmation").textContent = "Failed to submit picks.";
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("confirmation").textContent = "Error submitting picks.";
+      }
+    });
 
     loadForm();
   </script>
