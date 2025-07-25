@@ -33,7 +33,7 @@ async function loadMatches() {
   });
 }
 
-document.getElementById("submitBtn").addEventListener("click", () => {
+document.getElementById("submitBtn").addEventListener("click", async () => {
   const form = document.getElementById("picksForm");
   const inputs = form.querySelectorAll("input[type='radio']:checked");
 
@@ -42,8 +42,34 @@ document.getElementById("submitBtn").addEventListener("click", () => {
     selections.push({ match: index + 1, pick: input.value });
   });
 
+  // Store locally as backup
   localStorage.setItem("userPicks", JSON.stringify(selections));
-  document.getElementById("confirmation").textContent = "Picks submitted!";
+
+  // Add today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
+  // Send to backend to write into picks.json
+  try {
+    const response = await fetch("/save-picks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        date: today,
+        picks: selections
+      })
+    });
+
+    if (response.ok) {
+      document.getElementById("confirmation").textContent = "Picks submitted!";
+    } else {
+      document.getElementById("confirmation").textContent = "Error saving picks.";
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    document.getElementById("confirmation").textContent = "Submission failed.";
+  }
 });
 
 (async () => {
